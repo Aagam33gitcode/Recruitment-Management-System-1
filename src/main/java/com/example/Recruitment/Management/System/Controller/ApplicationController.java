@@ -1,6 +1,7 @@
 package com.example.Recruitment.Management.System.Controller;
 
 
+import com.example.Recruitment.Management.System.Entity.User;
 import com.example.Recruitment.Management.System.Security.userSecEntity;
 import com.example.Recruitment.Management.System.Services.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,12 @@ public class ApplicationController {
     @GetMapping("/apply")
     public ResponseEntity<String> applyJob(@RequestParam("job_id") Long jobId,
                                            Authentication authentication) {
-        // Get logged-in user details from JWT context
-        userSecEntity userDetails = (userSecEntity) authentication.getPrincipal();
-        Long applicantId = userDetails.getId();
+        User user = (User) authentication.getPrincipal();  // fixed line
+        Long applicantId = user.getId();
 
         applicationService.applyForJob(jobId, applicantId);
         return ResponseEntity.ok("Application submitted successfully!");
     }
+
 }
 

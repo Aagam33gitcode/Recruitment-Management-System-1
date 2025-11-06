@@ -2,8 +2,9 @@ package com.example.Recruitment.Management.System.Security;
 
 
 
-import com.example.Recruitment.Management.System.Entity.UserEntity;
+import com.example.Recruitment.Management.System.Entity.User;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ public class JwtTokenProvider {
 
     private final long jwtExpirationMs = 86400000; // 1 day
 
-    public String generateToken(UserEntity user) {
+    public String generateToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .claim("role", user.getUserType().name())

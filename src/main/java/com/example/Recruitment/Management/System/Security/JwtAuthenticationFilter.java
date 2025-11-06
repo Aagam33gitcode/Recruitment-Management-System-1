@@ -1,18 +1,17 @@
 package com.example.Recruitment.Management.System.Security;
 
 import com.example.Recruitment.Management.System.Repositories.UserRepository;
-import com.example.Recruitment.Management.System.Security.JwtTokenProvider;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -36,10 +35,9 @@ public class JwtAuthenticationFilter extends GenericFilter {
                 var user = userRepository.findByEmail(email).orElse(null);
 
                 if (user != null) {
+                    var authority = new SimpleGrantedAuthority("ROLE_" + user.getUserType().name());
                     var auth = new UsernamePasswordAuthenticationToken(
-                            user.getEmail(),
-                            null,
-                            Collections.emptyList()
+                            user, null, List.of(authority)
                     );
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
                     SecurityContextHolder.getContext().setAuthentication(auth);

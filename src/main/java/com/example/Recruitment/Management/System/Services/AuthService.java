@@ -3,8 +3,9 @@ package com.example.Recruitment.Management.System.Services;
 import com.example.Recruitment.Management.System.Dto.JwtResponse;
 import com.example.Recruitment.Management.System.Dto.LoginRequest;
 import com.example.Recruitment.Management.System.Dto.SignupRequest;
-import com.example.Recruitment.Management.System.Entity.UserEntity;
+import com.example.Recruitment.Management.System.Entity.User;
 import com.example.Recruitment.Management.System.Repositories.UserRepository;
+import com.example.Recruitment.Management.System.Security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +25,7 @@ public class AuthService {
             throw new RuntimeException("Email already registered!");
         }
 
-        UserEntity user = modelMapper.map(request, UserEntity.class);
+        User user = modelMapper.map(request, User.class);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         userRepository.save(user);
@@ -32,7 +33,7 @@ public class AuthService {
     }
 
     public JwtResponse login(LoginRequest request) {
-        UserEntity user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid email or password"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {

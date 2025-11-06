@@ -24,7 +24,7 @@ public class userSecService implements UserDetailsService {
         userSecEntity secUser = new userSecEntity();
         secUser.setId(user.getId());
         secUser.setEmail(user.getEmail());
-        secUser.setPassword(user.getPasswordHash());
+        secUser.setPassword(user.getPassword());
         return secUser;
     }
 }
